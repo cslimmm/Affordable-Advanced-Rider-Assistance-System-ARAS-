@@ -27,7 +27,7 @@ class SafetySensorSystem:
         
         # Telegram
         self.BOT_TOKEN = "8683916136:AAFu_Xub_ZORo6koV7d9LcAWLnmxB7Jl6kc"
-        self.CHAT_ID = "619974571"
+        self.CHAT_ID = "123456"
         
         # GPS
         self.gps = serial.Serial(port='/dev/ttyAMA2', baudrate=9600, timeout=1)
