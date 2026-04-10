@@ -26,7 +26,7 @@ class SafetySensorSystem:
         self.MQTT_TOPIC = "mycompany/vehiclesafety/demo_customer/vehicle_001/status/emergency"
         
         # Telegram
-        self.BOT_TOKEN = "8683916136:AAFu_Xub_ZORo6koV7d9LcAWLnmxB7Jl6kc"
+        self.BOT_TOKEN = "8683916136:AAFu_Xub_ZORo6koV7d9LcAWLnmxB7Jl6k="
         self.CHAT_ID = "123456"
         
         # GPS
