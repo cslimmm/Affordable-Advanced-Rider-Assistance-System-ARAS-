@@ -38,7 +38,7 @@ class RearSensorSystem:
                     distance_cm = (dist_high << 8) + dist_low
                     # converter cm -> meters
                     distance_m = distance_cm / 100.0
-                    # print("Distance: ",distance_m)
+                    #print("Distance: ",distance_m)
                     return distance_m
         return -1
     
@@ -46,9 +46,9 @@ class RearSensorSystem:
         """Controls LED and MQTT based on distance."""
         current_time = time.monotonic()
             
-        if distance_m < 10:
+        if distance_m < 10 and distance_m > 0.5:
             status = "DANGER"
-            if distance_m < 5:
+            if distance_m < 5 and distance_m > 0.5:
                 color = (255, 0, 0) 
             else:
                 color = (255, 165, 0)
