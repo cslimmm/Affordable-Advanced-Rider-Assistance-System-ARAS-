@@ -60,20 +60,30 @@ class VehicleSafetySystem:
         self.frame_lock = threading.Lock()
         self.running = False
 
-        # 5. Parameters for distance measurment.
-        self.BASELINE = 10.0 # The distance between your lenses
-        self.FOCAL_PIXELS = 600 # Calibration constant for IMX219 @ 640x480
+        # 4. Parameters for distance measurment.
+#         self.BASELINE = 10.0 # The distance between your lenses
+#         self.FOCAL = 500 # Calibration constant for IMX219 @ 640x480
+        
+        data = np.load("/home/cspi/Documents/calibration_new/stereo_params.npz")
+    
+        # Extract the scalar Focal Length (fx) from the K1 matrix
+        # K1 is [[fx, 0, cx], [0, fy, cy], [0, 0, 1]]
+        self.FOCAL = data["K1"][0, 0] 
+        
+        # Extract the scalar Baseline (B) from the Translation vector T
+        # T is usually [x, y, z]. The baseline is the norm of this vector.
+        self.BASELINE = np.linalg.norm(data["T"])
 
     def update_leds(self, dist_cm):
         dist_m = dist_cm / 100.0
         target_color = (0, 0, 0)
-        if dist_m < 3.0:
+        if dist_m < 5.0:
             current_time = time.time()
             if current_time - self.last_blink_time > 0.2:
                 self.blink_state = not self.blink_state
                 self.last_blink_time = current_time
             target_color = (255, 0, 0) if self.blink_state else (0, 0, 0)
-        elif dist_m < 5.0:
+        elif dist_m < 10.0:
             target_color = (255, 100, 0)
         else:
             # Off
@@ -87,7 +97,12 @@ class VehicleSafetySystem:
         return (cv2.cvtColor(self.cam_l.capture_array(), cv2.COLOR_BGRA2RGB),
                 cv2.cvtColor(self.cam_r.capture_array(), cv2.COLOR_BGRA2RGB))
 
-    def process_ai(self, frame):
+    def process_ai(self, frame, size = None):
+        # Use provided size or default to self.img_size
+#         if size:
+#             target_size = 160
+#         else:
+#             target_size = self.img_size
         return self.model.predict(frame, imgsz=self.img_size, conf=0.4, verbose=False, rect=True)
 
     def handle_alerts(self, results):
@@ -132,7 +147,7 @@ class VehicleSafetySystem:
         else:
             line1 = "Dist: N/A"
         line2 = f"FPS : {fps:.1f}"
-         
+        
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 0.7
         thickness = 2
@@ -141,19 +156,20 @@ class VehicleSafetySystem:
         # 2. Get size of the longest line to size the box
         (w1, h1), _ = cv2.getTextSize(line1, font, font_scale, thickness)
         (w2, h2), _ = cv2.getTextSize(line2, font, font_scale, thickness)
-         
+        
         box_w = max(w1, w2) + 10
         box_h = h1 + h2 + line_spacing
-         
+        
         # 3. Draw one single white box for both
         x, y = position
         cv2.rectangle(img, (x, y - h1 - 5), (x + box_w, y + box_h - h1), (255, 255, 255), cv2.FILLED)
-         
+        
         # 4. Draw Black Text lines
         cv2.putText(img, line1, (x + 5, y), font, font_scale, (0, 0, 0), thickness)
         cv2.putText(img, line2, (x + 5, y + line_spacing), font, font_scale, (0, 0, 0), thickness)
     
     def calculate_distance(self, res_l, f_r, annotated_l):
+        #res_r = f_r
         # Check if at least one object is detected in both cameras
         if len(res_l[0].boxes) > 0:
             box_l = res_l[0].boxes[0]
@@ -170,8 +186,9 @@ class VehicleSafetySystem:
                     # Calculate Disparity (horizontal shift)
                     disparity = abs(x_l - x_r)
                     if disparity > 0: 
+        #                 print(disparity)
                         # Calculate Distance in CM
-                        self.dist = (self.BASELINE * self.FOCAL_PIXELS) / disparity  # Baseline * Focal / Disparity 
+                        self.dist = (self.BASELINE * self.FOCAL) / (disparity * 4.5) # Baseline * Focal / Disparity 
                         self.update_leds(self.dist)
         else:
             # No object detected, turn off LEDs
@@ -186,8 +203,11 @@ class VehicleSafetySystem:
                 
                 f_l, f_r = self.get_frames()
                 res_l = self.process_ai(f_l)
+                
                 self.handle_alerts(res_l)
+                
                 annotated_l = res_l[0].plot()
+                #annotated_r = res_r[0].plot()
                 
                 self.calculate_distance(res_l, f_r, annotated_l)
                 
