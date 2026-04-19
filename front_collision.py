@@ -61,9 +61,6 @@ class VehicleSafetySystem:
         self.running = False
 
         # 4. Parameters for distance measurment.
-#         self.BASELINE = 10.0 # The distance between your lenses
-#         self.FOCAL = 500 # Calibration constant for IMX219 @ 640x480
-        
         data = np.load("/home/cspi/Documents/calibration_new/stereo_params.npz")
     
         # Extract the scalar Focal Length (fx) from the K1 matrix
