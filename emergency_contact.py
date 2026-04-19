@@ -9,7 +9,11 @@ import threading
 class SafetySensorSystem:
     def __init__(self, mqtt_client):
         self.client = mqtt_client
-        self.bus = smbus2.SMBus(1)
+        try:
+            self.bus = smbus2.SMBus(1)
+        except OSError:
+            self.bus = smbus2.SMBus(1)  # re-init bus
+            return 0
         self.DEVICE_ADDRESS = 0x68
         
         # MPU6050 Wakeup
@@ -22,12 +26,12 @@ class SafetySensorSystem:
         
         # Thresholds
         self.TILT_THRESHOLD = 70.0
-        self.GYRO_THRESHOLD = 80.0
+        self.GYRO_THRESHOLD = 100.0
         self.MQTT_TOPIC = "mycompany/vehiclesafety/demo_customer/vehicle_001/status/emergency"
         
         # Telegram
-        self.BOT_TOKEN = "8683916136:AAFu_Xub_ZORo6koV7d9LcAWLnmxB7Jl6k="
-        self.CHAT_ID = "123456"
+        self.BOT_TOKEN = "8683916136:AAFu_Xub_ZORo6koV7d9LcAWLnmxB7Jl6kc"
+        self.CHAT_ID = "123456789"
         
         # GPS
         self.gps = serial.Serial(port='/dev/ttyAMA2', baudrate=9600, timeout=1)
@@ -94,7 +98,7 @@ class SafetySensorSystem:
             print("Emergency confirmed! Sending Telegram alert.")
             self.send_telegram_alert(self.latest_gps['latitude'], self.latest_gps['longitude'])
             self.CURRENT_STATE = "SAFE"
-            #self.client.publish(self.MQTT_TOPIC, "SAFE")
+            self.client.publish(self.MQTT_TOPIC, "SAFE")
         elif payload == "OFF":
             print("System reset to SAFE.")
             self.CURRENT_STATE = "SAFE"
@@ -112,13 +116,14 @@ class SafetySensorSystem:
             self.crash_count += 1
             print(f"({self.crash_count}) POSSIBLE ACCIDENT DETECTED")
             print(f"Roll: {roll:.2f}, Pitch: {pitch:.2f}, Gyro: X={gx:.2f}, Y={gy:.2f}, Z={gz:.2f}")
-            if self.crash_count >= 5 and self.CURRENT_STATE == "SAFE":
+            if self.crash_count >= 5:
                 self.CURRENT_STATE = "PENDING"
                 self.client.publish(self.MQTT_TOPIC, "PENDING")
                 print("Crash detected - Status: PENDING")
                 self.crash_count = 0
         else:
             self.crash_count = 0
+        time.sleep(0.01)
 
     # --- Main Loop ---
     def run(self, is_running_func):
