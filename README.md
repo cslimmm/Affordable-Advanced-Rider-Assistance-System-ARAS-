@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Prototype
+<img width="1600" height="981" alt="IMG_4244" src="https://github.com/user-attachments/assets/1b15da6a-0d1b-41af-8426-223745c742d7" />
+<img width="1273" height="1600" alt="IMG_4248" src="https://github.com/user-attachments/assets/b37aafcf-a85d-4764-a7f6-576a0b67eaf4" />
+Housing for RaspberryPi5, MPU-6050, and NEO-6M GPS module.
+<img width="1238" height="1600" alt="IMG_4246" src="https://github.com/user-attachments/assets/c3309fd1-b3b4-480e-9b0d-476802ccf769" />
+Radar sensor
