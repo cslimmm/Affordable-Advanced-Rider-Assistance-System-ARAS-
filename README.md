@@ -15,7 +15,7 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-## Roboflow Dataser
+## Roboflow Dataset
 Link to dataset: https://app.roboflow.com/cs-66wpm/aras_objectrecognition/browse?queryText=&pageSize=50&startingIndex=0&browseQuery=true
 
 ## Prototype
@@ -25,5 +25,9 @@ Housing for RaspberryPi5, MPU-6050, and NEO-6M GPS module.
 <img width="1238" height="1600" alt="IMG_4246" src="https://github.com/user-attachments/assets/c3309fd1-b3b4-480e-9b0d-476802ccf769" />
 Radar sensor
 
-Solidworks file and drop test analysis of each casing shown above can be viewed here:
+## Demo Video
+https://youtu.be/jy8-gMhvQp0?si=_QDG5dcfA14uf9l6
+
+## SolidWorks Files
+SolidWorks file and drop test analysis of each casing shown above can be viewed here:
 https://numcmy-my.sharepoint.com/:f:/g/personal/efyst15_nottingham_edu_my/IgCcl6W66rZCToUtHCtxUcYyAXRpEvEw3ucXs1I4pyAn_08?e=xnidfJ
