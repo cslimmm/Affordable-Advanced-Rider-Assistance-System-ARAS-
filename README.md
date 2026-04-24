@@ -25,5 +25,5 @@ Housing for RaspberryPi5, MPU-6050, and NEO-6M GPS module.
 <img width="1238" height="1600" alt="IMG_4246" src="https://github.com/user-attachments/assets/c3309fd1-b3b4-480e-9b0d-476802ccf769" />
 Radar sensor
 
-Solidworks file and drop test analysis of each casing shown above can be view here:
+Solidworks file and drop test analysis of each casing shown above can be viewed here:
 https://numcmy-my.sharepoint.com/:f:/g/personal/efyst15_nottingham_edu_my/IgCcl6W66rZCToUtHCtxUcYyAXRpEvEw3ucXs1I4pyAn_08?e=xnidfJ
